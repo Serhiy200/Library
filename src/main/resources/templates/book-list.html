@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reader</title>
+</head>
+<body>
+<form th:action="@{/reader/book}" th:object="${book}" method="post">
+    <input type="text" name="bookName" placeholder="Book name"><br>
+    <button type="submit">Пошук</button>
+</form>
+
+<div th:each="book : ${books}">
+    <a th:href="@{/reader/book/{id}(id=${book.id})}"
+       th:text="${book.getId()} + ' ' + ${book.getBookName()} + ' ' + ${book.getAuthor()} +' '+ ${book.getDescription()}"/>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <p>Id: <a th:text="${book.getId()}"/></p>
+    <p>Book name: <a th:text="${book.getBookName()}"/></p>
+    <p>Author: <a th:text="${book.getAuthor()}"/></p>
+    <p>Description: <a th:text="${book.getDescription()}"/></p>
+    <p>Book category: <a th:text="${book.getCategoryName()}"/></p>
+</div>
+</body>
+</html>
