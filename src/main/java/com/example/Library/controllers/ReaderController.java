@@ -1,5 +1,6 @@
 package com.example.Library.controllers;
 
+import com.example.Library.dao.BookMapper;
 import com.example.Library.dao.LibraryDAO;
 import com.example.Library.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +15,29 @@ public class ReaderController {
 
 
     private LibraryDAO libraryDAO;
+    private BookMapper booksMapper;
+
+
 
     @Autowired
-    public ReaderController(LibraryDAO libraryDAO) {
-        this.libraryDAO = libraryDAO;
+    public ReaderController(BookMapper booksMapper) {
+//        this.libraryDAO = libraryDAO;
+        this.booksMapper = booksMapper;
     }
 
     @GetMapping("/")
     public String getBooks(Model model, Book book) {
 
         //get list of book from dao
-        model.addAttribute("books", libraryDAO.getAllBooks());
+        model.addAttribute("books",  booksMapper.findAll());
+
         return "book-list";
     }
 
     @GetMapping("/book/{id}")
     public String getCustomer(@PathVariable("id") int id, Model model) {
 
-        model.addAttribute("book", libraryDAO.getBookById(id));
+        model.addAttribute("book", booksMapper.findBookById(id));
         return "book-review";
     }
 
@@ -40,6 +46,6 @@ public class ReaderController {
 
         libraryDAO.getBooksByName(book.getBookName());
         model.addAttribute("books", libraryDAO.getBooksByName(book.getBookName()));
-        return "librarian-page";
+        return "book-list";
     }
 }

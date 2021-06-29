@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 2.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.Library.dao.BookMapper">
+
+    <!--     Пользовательский набор результатов возврата-->
+    <resultMap id="bookMap" type="com.example.Library.models.Book">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="bookName" column="book_name" javaType="java.lang.String"></result>
+        <result property="author" column="author" javaType="java.lang.String"></result>
+        <result property="description" column="description" javaType="java.lang.String"></result>
+        <result property="category.id" column="id_category" javaType="java.lang.Integer"></result>
+        <result property="category.categoryName" column="category_name" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <resultMap id="categoryMap" type="com.example.Library.models.Categories">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="categoryName" column="category_name" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <select id="findAll" resultMap="bookMap">
+        SELECT books.id, books.book_name , books.author , books.description, books.id_category, category.category_name
+        FROM books JOIN category ON category.id = books.id_category ORDER BY books.id
+    </select>
+
+    <select id="findBookById" resultMap="bookMap">
+        SELECT books.id, books.book_name , books.author , books.description, books.id_category, category.category_name
+        FROM books JOIN category ON category.id = books.id_category WHERE books.id = #{id}
+    </select>
+
+    <select id="getAllCategories" resultMap="categoryMap">
+        SELECT * FROM category
+    </select>
+
+    <insert id="addCategory">
+        INSERT INTO category (category_name) VALUES(#{categoryName})
+    </insert>
+
+    <insert id="addBook">
+        INSERT INTO books (book_name, author, description, id_category)
+        VALUES(#{bookName},#{author},#{description},#{category.id})
+    </insert>
+
+    <delete id="deleteBook" parameterType="int">
+        DELETE FROM books WHERE id = #{id}
+    </delete>
+
+    <update id="updateBook">
+        UPDATE books set book_name=#{bookName}, author=#{author}, description=#{description}, id_category=#{category.id}
+        WHERE id=#{id}
+    </update>
+
+</mapper>

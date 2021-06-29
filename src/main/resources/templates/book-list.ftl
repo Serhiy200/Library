@@ -10,9 +10,12 @@
     <button type="submit">Пошук</button>
 </form>
 
-<div th:each="book : ${books}">
-    <a th:href="@{/reader/book/{id}(id=${book.id})}"
-       th:text="${book.getId()} + ' ' + ${book.getBookName()} + ' ' + ${book.getAuthor()} +' '+ ${book.getDescription()}"/>
+<div>
+<#list books as book>
+<p>
+    <a  href="/reader/book/${book.id}">${book.id} ${book.bookName} ${book.author} ${book.description}</a>
+</p>
+</#list>
 </div>
 </body>
 </html>

@@ -7,36 +7,30 @@ import javax.validation.constraints.Size;
 public class Book {
     private int id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 3, max = 50, message = "Name should be between 3 and 50 characters")
     private String bookName;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 3, max = 50, message = "Name should be between 3 and 50 characters")
     private String author;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 3, max = 50, message = "Name should be between 3 and 50 characters")
     private String description;
 
-    private int idCategory;
-    private String categoryName;
+//    private int idCategory;
+//    private String categoryName;
 
-    public int getIdCategory() {
-        return idCategory;
-    }
-
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+//    public int getIdCategory() {
+//        return idCategory;
+//    }
+//
+//    public void setIdCategory(int idCategory) {
+//        this.idCategory = idCategory;
+//    }
+//
+//    public String getCategoryName() {
+//        return categoryName;
+//    }
+//
+//    public void setCategoryName(String categoryName) {
+//        this.categoryName = categoryName;
+//    }
 
     private Categories category;
 
@@ -90,14 +84,14 @@ public class Book {
         this.category = category;
     }
 
-    public Book(int id, String bookName, String author, String description, int idCategory, String categoryName) {
-        this.id = id;
-        this.bookName = bookName;
-        this.author = author;
-        this.description = description;
-        this.idCategory = idCategory;
-        this.categoryName = categoryName;
-    }
+//    public Book(int id, String bookName, String author, String description, int idCategory, String categoryName) {
+//        this.id = id;
+//        this.bookName = bookName;
+//        this.author = author;
+//        this.description = description;
+//        this.idCategory = idCategory;
+//        this.categoryName = categoryName;
+//    }
 
     public Book() {
     }

@@ -1,5 +1,6 @@
 package com.example.Library.controllers;
 
+import com.example.Library.dao.BookMapper;
 import com.example.Library.dao.LibraryDAO;
 import com.example.Library.models.Book;
 import com.example.Library.models.Categories;
@@ -18,33 +19,43 @@ public class LibrarianController {
 
     private LibraryDAO libraryDAO;
 
+    private BookMapper bookMapper;
+
     @Autowired
-    public LibrarianController(LibraryDAO libraryDAO) {
-        this.libraryDAO = libraryDAO;
+    public LibrarianController(BookMapper bookMapper) {
+        this.bookMapper = bookMapper;
     }
 
 
-    @GetMapping("/")
+    //    @GetMapping("/")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getBooks(Model model, Book book) {
         //get list of books from dao
-        model.addAttribute("books", libraryDAO.getAllBooks());
-        model.addAttribute("categories", libraryDAO.getAllCategories());
+        model.addAttribute("books", bookMapper.findAll());
+//        model.addAttribute("categories", bookMapper.getAllCategory());
         return "librarian-page";
     }
 
     @GetMapping("/add")
     public String addBookOrCategory(Model model, Book book) {
         //get list of books from dao
-        model.addAttribute("books", libraryDAO.getAllBooks());
-        model.addAttribute("categories", libraryDAO.getAllCategories());
+//        model.addAttribute("books", libraryDAO.getAllBooks());
+        model.addAttribute("categories", bookMapper.getAllCategories());
         return "book-add";
     }
 
+    @PostMapping("/add")
+    public String addNewBook(@ModelAttribute("book") Book book, Model model) {
+
+        bookMapper.addBook(book);
+//        model.addAttribute("books", libraryDAO.getBooksByName(book.getBookName()));
+        return "redirect:/librarian/";
+    }
 
     @PostMapping("/book")
     public String findBookByName(@ModelAttribute("book") Book book, Model model) {
 
-        libraryDAO.getBooksByName(book.getBookName());
+        //libraryDAO.getBooksByName(book.getBookName());
         model.addAttribute("books", libraryDAO.getBooksByName(book.getBookName()));
         return "librarian-page";
     }
@@ -52,29 +63,30 @@ public class LibrarianController {
     @PostMapping("/category")
     public String addCategory(@ModelAttribute("category") Categories category, Model model) {
 
-        libraryDAO.addCategory(category.getCategoryName());
+        bookMapper.addCategory(category.getCategoryName());
         return "redirect:/librarian/";
     }
 
     @GetMapping("/book/{id}")
     public String getCustomer(@PathVariable("id") int id, Model model) {
 
-        model.addAttribute("book", libraryDAO.getBookById(id));
-        model.addAttribute("categories", libraryDAO.getAllCategories());
+        model.addAttribute("book", bookMapper.findBookById(id));
+        model.addAttribute("categories", bookMapper.getAllCategories());
         return "book-update";
     }
 
 
-    @PutMapping("/book/{id}")
-    public String updateCustomer(@Valid @ModelAttribute("book") Book book, @PathVariable("id") int id, BindingResult bindingResult) {
+    //    @PutMapping("/book/{id}")
+    @RequestMapping(value = "/book/{id}", method = {RequestMethod.PUT})
+    public String updateCustomer(@ModelAttribute("book") Book book, @PathVariable("id") int id, BindingResult bindingResult) {
 
-        //verification data from html
-        if (bindingResult.hasErrors()) {
-            return "book-list";
-        }
+//        //verification data from html
+//        if (bindingResult.hasErrors()) {
+//            return "book-list";
+//        }
 
         //update date about book in Database
-        libraryDAO.updateBook(id, book);
+        bookMapper.updateBook(book);
 
         return "redirect:/librarian/";
     }
@@ -83,7 +95,7 @@ public class LibrarianController {
     public String deleteCustomer(@PathVariable(value = "id", required = false) int id) {
 
         //delete book from Database
-        libraryDAO.deleteBook(id);
+        bookMapper.deleteBook(id);
 
         return "redirect:/librarian/";
     }

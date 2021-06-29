@@ -26,7 +26,7 @@ public class LibraryDAO {
 
         String sql = "INSERT INTO books (book_name, author, description, id_category) VALUES(?,?,?,?)";
 
-        jdbcTemplate.update(sql, book.getBookName(), book.getAuthor(), book.getDescription(), book.getCategory().getId());
+//        jdbcTemplate.update(sql, book.getBookName(), book.getAuthor(), book.getDescription(), book.getIdCategory());
     }
 
     public List<Book> getAllBooks() {
@@ -73,6 +73,6 @@ public class LibraryDAO {
     public void updateBook(int id, Book book) {
 
         String sql = "UPDATE books set book_name = ?, author = ?, description = ?, id_category = ? WHERE id = ?";
-        jdbcTemplate.update(sql, book.getBookName(), book.getAuthor(), book.getDescription(), book.getCategory().getId(), id);
+//        jdbcTemplate.update(sql, book.getBookName(), book.getAuthor(), book.getDescription(), book.getIdCategory(), id);
     }
 }
