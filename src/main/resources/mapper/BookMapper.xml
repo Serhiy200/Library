@@ -50,4 +50,25 @@
         WHERE id=#{id}
     </update>
 
+    <select id="searchBook" resultMap="bookMap">
+        <bind name="bookName" value="'%' + bookName + '%'"/>
+        <bind name="author" value="'%' + author + '%'"/>
+        SELECT books.id, books.book_name , books.author , books.description, books.id_category, category.category_name
+        FROM books JOIN category ON category.id = books.id_category
+        WHERE
+        <if test="category.id == -1">
+            books.id_category is not null
+        </if>
+        <if test="category.id > 0">
+            books.id_category = #{category.id}
+        </if>
+        <if test="bookName != null">
+            AND books.book_name like #{bookName}
+        </if>
+        <if test="author != null">
+            AND books.author like #{author}
+        </if>
+    </select>
+
+
 </mapper>

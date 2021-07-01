@@ -17,6 +17,7 @@ public interface BookMapper {
     Book findBookById(int id);
 //    List<Book> selectAllBooks();
 
+    List<Book> searchBook(Book book);
     List<Categories> getAllCategories();
 
     void addCategory(String categoryName);
@@ -26,4 +27,5 @@ public interface BookMapper {
     void deleteBook(int id);
 
     void updateBook(Book book);
+
 }

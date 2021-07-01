@@ -1,7 +1,6 @@
 package com.example.Library.controllers;
 
 import com.example.Library.dao.BookMapper;
-import com.example.Library.dao.LibraryDAO;
 import com.example.Library.models.Book;
 import com.example.Library.models.Categories;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,94 +10,111 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
 @RequestMapping("/librarian")
 public class LibrarianController {
 
-    private LibraryDAO libraryDAO;
-
-    private BookMapper bookMapper;
+    private BookMapper booksMapper;
 
     @Autowired
     public LibrarianController(BookMapper bookMapper) {
-        this.bookMapper = bookMapper;
+        this.booksMapper = bookMapper;
     }
 
 
-    //    @GetMapping("/")
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     public String getBooks(Model model, Book book) {
         //get list of books from dao
-        model.addAttribute("books", bookMapper.findAll());
-//        model.addAttribute("categories", bookMapper.getAllCategory());
+        model.addAttribute("books", booksMapper.findAll());
+        model.addAttribute("categories", booksMapper.getAllCategories());
         return "librarian-page";
     }
 
     @GetMapping("/add")
     public String addBookOrCategory(Model model, Book book) {
         //get list of books from dao
-//        model.addAttribute("books", libraryDAO.getAllBooks());
-        model.addAttribute("categories", bookMapper.getAllCategories());
+        model.addAttribute("categories", booksMapper.getAllCategories());
         return "book-add";
     }
 
     @PostMapping("/add")
-    public String addNewBook(@ModelAttribute("book") Book book, Model model) {
+    public String addNewBook(@Valid @ModelAttribute("book") Book book, BindingResult bindingResult, Model model) {
 
-        bookMapper.addBook(book);
-//        model.addAttribute("books", libraryDAO.getBooksByName(book.getBookName()));
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = LibraryController.getErrors(bindingResult);
+
+            model.addAttribute("categories", booksMapper.getAllCategories());
+            model.mergeAttributes(errorsMap);
+            return "book-add";
+        }
+
+        booksMapper.addBook(book);
         return "redirect:/librarian/";
     }
 
     @PostMapping("/book")
     public String findBookByName(@ModelAttribute("book") Book book, Model model) {
 
-        //libraryDAO.getBooksByName(book.getBookName());
-        model.addAttribute("books", libraryDAO.getBooksByName(book.getBookName()));
+        List<Book> searchBooks = booksMapper.searchBook(book);
+        model.addAttribute("categories", booksMapper.getAllCategories());
+
+        if (searchBooks.size() == 0) {
+            model.addAttribute("errorMessage", "We can't find book with these parameters");
+            return "librarian-page";
+        }
+        model.addAttribute("books", searchBooks);
         return "librarian-page";
     }
 
     @PostMapping("/category")
-    public String addCategory(@ModelAttribute("category") Categories category, Model model) {
+    public String addCategory(@Valid @ModelAttribute("category") Categories category, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = LibraryController.getErrors(bindingResult);
 
-        bookMapper.addCategory(category.getCategoryName());
+            model.addAttribute("categories", booksMapper.getAllCategories());
+            model.mergeAttributes(errorsMap);
+            return "book-add";
+        }
+
+        booksMapper.addCategory(category.getCategoryName());
         return "redirect:/librarian/";
     }
 
     @GetMapping("/book/{id}")
-    public String getCustomer(@PathVariable("id") int id, Model model) {
+    public String getBook(@PathVariable("id") int id, Model model) {
 
-        model.addAttribute("book", bookMapper.findBookById(id));
-        model.addAttribute("categories", bookMapper.getAllCategories());
+        model.addAttribute("book", booksMapper.findBookById(id));
+        model.addAttribute("categories", booksMapper.getAllCategories());
         return "book-update";
     }
 
+    @PostMapping("/book/{id}")
+    public String updateCustomer(@Valid @ModelAttribute("book") Book book, BindingResult bindingResult, Model model) {
 
-    //    @PutMapping("/book/{id}")
-    @RequestMapping(value = "/book/{id}", method = {RequestMethod.PUT})
-    public String updateCustomer(@ModelAttribute("book") Book book, @PathVariable("id") int id, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = LibraryController.getErrors(bindingResult);
 
-//        //verification data from html
-//        if (bindingResult.hasErrors()) {
-//            return "book-list";
-//        }
+            model.addAttribute("categories", booksMapper.getAllCategories());
+            model.mergeAttributes(errorsMap);
+            return "book-update";
+        }
 
         //update date about book in Database
-        bookMapper.updateBook(book);
+        booksMapper.updateBook(book);
 
         return "redirect:/librarian/";
     }
 
-    @DeleteMapping("/book/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable(value = "id", required = false) int id) {
 
         //delete book from Database
-        bookMapper.deleteBook(id);
+        booksMapper.deleteBook(id);
 
         return "redirect:/librarian/";
     }
-
-
 }

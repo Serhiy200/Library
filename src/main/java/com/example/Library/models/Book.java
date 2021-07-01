@@ -7,30 +7,14 @@ import javax.validation.constraints.Size;
 public class Book {
     private int id;
 
+    @NotEmpty(message = "Should not be empty")
     private String bookName;
 
+    @NotEmpty(message = "Should not be empty")
     private String author;
 
+    @NotEmpty(message = "Should not be empty")
     private String description;
-
-//    private int idCategory;
-//    private String categoryName;
-
-//    public int getIdCategory() {
-//        return idCategory;
-//    }
-//
-//    public void setIdCategory(int idCategory) {
-//        this.idCategory = idCategory;
-//    }
-//
-//    public String getCategoryName() {
-//        return categoryName;
-//    }
-//
-//    public void setCategoryName(String categoryName) {
-//        this.categoryName = categoryName;
-//    }
 
     private Categories category;
 
