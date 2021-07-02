@@ -109,7 +109,7 @@ public class LibrarianController {
         return "redirect:/librarian/";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable(value = "id", required = false) int id) {
 
         //delete book from Database

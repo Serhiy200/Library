@@ -38,7 +38,6 @@
 </div>
 
 <form action="/librarian/delete/${book.id}" method="post">
-    <input type="hidden" name="_method" value="delete"/>
     <button type="submit">Delete</button>
 </form>
 </@c.page>
